@@ -2,7 +2,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {video: window.exampleVideoData[0]};
+    this.state = {video: window.exampleVideoData[0], videos: window.exampleVideoData};
+
+    props.searchYouTube((data) => this.state = {video: data[0], videos: data}, {});
   }
 
   handleListClick(event) {
@@ -29,7 +31,7 @@ class App extends React.Component {
             <VideoPlayer video={this.state.video}/>
           </div>
           <div className="col-md-5">
-            <VideoList videos={window.exampleVideoData} handleClick={this.handleListClick.bind(this)}/>
+            <VideoList videos={this.state.videos} handleClick={this.handleListClick.bind(this)}/>
           </div>
         </div>
       </div>
@@ -41,4 +43,4 @@ class App extends React.Component {
 // `var` declarations will only exist globally where explicitly defined
 window.App = App;
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App searchYouTube={window.searchYouTube} />, document.getElementById('app'));
