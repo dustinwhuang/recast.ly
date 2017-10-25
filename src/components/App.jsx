@@ -2,11 +2,17 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {video: window.exampleVideoData[0]};
   }
 
   handleListClick(event) {
     console.log('event.target', event.target);
+
+    for (let i = 0; i < window.exampleVideoData.length; i++) {
+      if (window.exampleVideoData[i].snippet.title === $(event.target).text()) {
+        this.setState({video: window.exampleVideoData[i]}); 
+      }
+    }
   }
 
   render() {
@@ -20,16 +26,16 @@ class App extends React.Component {
         </nav>
         <div className="row">
           <div className="col-md-7">
-            <VideoPlayer video={window.exampleVideoData[0]}/>
+            <VideoPlayer video={this.state.video}/>
           </div>
-          <div className="col-md-5" onClick={(e) => this.handleListClick(e)}>
-            <VideoList videos={window.exampleVideoData}/>
+          <div className="col-md-5">
+            <VideoList videos={window.exampleVideoData} handleClick={this.handleListClick.bind(this)}/>
           </div>
         </div>
       </div>
     );
   }
-};
+}
 
 // In the ES6 spec, files are "modules" and do not share a top-level scope
 // `var` declarations will only exist globally where explicitly defined
