@@ -4,17 +4,32 @@ class App extends React.Component {
 
     this.state = {video: window.exampleVideoData[0], videos: window.exampleVideoData};
 
-    props.searchYouTube((data) => this.state = {video: data[0], videos: data}, {});
+    props.searchYouTube({query: 'React.js', max: 5, key: window.YOUTUBE_API_KEY}, (data) => this.setState({video: data[0], videos: data}));
   }
 
   handleListClick(event) {
-    console.log('event.target', event.target);
-
-    for (let i = 0; i < window.exampleVideoData.length; i++) {
-      if (window.exampleVideoData[i].snippet.title === $(event.target).text()) {
-        this.setState({video: window.exampleVideoData[i]}); 
+    for (let i = 0; i < this.state.videos.length; i++) {
+      if (this.state.videos[i].snippet.title === $(event.target).text()) {
+        this.setState({video: this.state.videos[i]}); 
       }
     }
+  }
+  
+  updateVideos(data) {
+    this.setState({video: data[0], videos: data});
+  }
+
+  handleSubmit(event) {
+    let query = $('.form-control').val();
+    let options = {query: query, max: 5, key: window.YOUTUBE_API_KEY};
+    this.props.searchYouTube(options, this.updateVideos.bind(this));
+  }
+
+  handleChange(event) {
+    let query = $('.form-control').val();
+    let options = {query: query, max: 5, key: window.YOUTUBE_API_KEY};
+    clearTimeout(this.state.debounce);
+    this.setState( {debounce: setTimeout(() => this.props.searchYouTube(options, this.updateVideos.bind(this)), 500) });
   }
 
   render() {
@@ -23,7 +38,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><h5><em>search</em> view goes here</h5></div>
+            <Search handleSubmit={this.handleSubmit.bind(this)} handleChange={this.handleChange.bind(this)} />
           </div>
         </nav>
         <div className="row">
