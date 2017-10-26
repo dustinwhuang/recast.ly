@@ -1,3 +1,11 @@
+import React from 'react';
+import Search from './Search.jsx';
+import VideoList from './VideoList.jsx';
+import VideoPlayer from './VideoPlayer.jsx'
+import searchYouTube from '../lib/searchYouTube.js'
+import youtube from '../config/youtube.js'
+import exampleVideoData from '../data/exampleVideoData.js'
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -69,4 +77,5 @@ class App extends React.Component {
 // `var` declarations will only exist globally where explicitly defined
 window.App = App;
 
-ReactDOM.render(<App searchYouTube={window.searchYouTube} />, document.getElementById('app'));
+
+export default App;

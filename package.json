@@ -23,6 +23,8 @@
     "babel-preset-react": "^6.5.0",
     "chai": "^3.5.0",
     "mocha": "2.3.3",
-    "sinon": "1.17.3"
+    "sinon": "1.17.3",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.3"
   }
 }
