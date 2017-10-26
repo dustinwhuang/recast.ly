@@ -4,7 +4,7 @@ class App extends React.Component {
 
     this.state = {video: window.exampleVideoData[0], videos: window.exampleVideoData};
 
-    props.searchYouTube({query: 'React.js', max: 5, key: window.YOUTUBE_API_KEY}, (data) => this.setState({video: data[0], videos: data}));
+    props.searchYouTube({query: '', max: 5, key: window.YOUTUBE_API_KEY}, (data) => this.setState({video: data[0], videos: data}));
   }
 
   handleListClick(event) {
@@ -15,21 +15,31 @@ class App extends React.Component {
     }
   }
   
-  updateVideos(data) {
-    this.setState({video: data[0], videos: data});
+  updateVideos(data, prevPageToken, nextPageToken) {
+    this.setState({video: data[0], videos: data, prevPageToken: prevPageToken, nextPageToken: nextPageToken});
   }
 
   handleSubmit(event) {
-    let query = $('.form-control').val();
-    let options = {query: query, max: 5, key: window.YOUTUBE_API_KEY};
-    this.props.searchYouTube(options, this.updateVideos.bind(this));
+    this.search();
   }
 
   handleChange(event) {
-    let query = $('.form-control').val();
-    let options = {query: query, max: 5, key: window.YOUTUBE_API_KEY};
     clearTimeout(this.state.debounce);
-    this.setState( {debounce: setTimeout(() => this.props.searchYouTube(options, this.updateVideos.bind(this)), 500) });
+    this.setState( {debounce: setTimeout(() => this.search(), 500) });
+  }
+
+  handlePrevClick() {
+    this.search(this.state.prevPageToken);
+  }
+
+  handleNextClick() {
+    this.search(this.state.nextPageToken);
+  }
+
+  search(pageToken) {
+    let query = $('.form-control').val();
+    let options = {query: query, max: 5, key: window.YOUTUBE_API_KEY, pageToken: pageToken};
+    this.props.searchYouTube(options, this.updateVideos.bind(this));
   }
 
   render() {
@@ -47,6 +57,7 @@ class App extends React.Component {
           </div>
           <div className="col-md-5">
             <VideoList videos={this.state.videos} handleClick={this.handleListClick.bind(this)}/>
+            <div className="pageButtons"><button onClick={this.handlePrevClick.bind(this)}>Previous</button><button onClick={this.handleNextClick.bind(this)}>Next</button></div>
           </div>
         </div>
       </div>

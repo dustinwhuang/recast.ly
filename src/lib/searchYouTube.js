@@ -7,10 +7,11 @@ var searchYouTube = (options, callback) => {
       q: options.query,
       maxResults: options.max,
       key: options.key,
+      pageToken: options.pageToken,
       videoEmbeddable: 'true',
       type: 'video'
     },
-    success: data => callback(data.items),
+    success: data => callback(data.items, data.prevPageToken, data.nextPageToken),
     error: data => console.log('error:', data)
   });
 };
